@@ -5,20 +5,48 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   </head>
   <body>
-    <a-scene mindar-image="imageTargetSrc: https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.mind;" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: ./targets5.mind" color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
       <a-assets>
-	<img id="card" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/card.png" />
-	<a-asset-item id="avatarModel" src="https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/examples/image-tracking/assets/card-example/softmind/scene.gltf"></a-asset-item>
+        <!-- Add the video asset here, ensure autoplay is off initially -->
+        <video id="video" src="vid2.mp4" crossorigin="anonymous" playsinline></video>
       </a-assets>
 
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
       <a-entity mindar-image-target="targetIndex: 0">
-        <a-plane src="#card" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
-        <a-gltf-model rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005" src="#avatarModel"
-          animation="property: position; to: 0 0.1 0.1; dur: 1000; easing: easeInOutQuad; loop: true; dir: alternate"
-        >
+        <!-- Adjust the video plane to ensure proper display -->
+        <a-plane material="shader: flat; src: #video" position="0 0 0" height="0.552" width="1" rotation="0 0 0"></a-plane>
       </a-entity>
     </a-scene>
+
+    <!-- Play Button -->
+    <button id="playButton" style="position: absolute; top: 20px; left: 20px; z-index: 100;">Play Video with Audio</button>
+
+    <script>
+      // Get references to the video element and play button
+      const video = document.getElementById('video');
+      const playButton = document.getElementById('playButton');
+
+      // Add event listener to the play button
+      playButton.addEventListener('click', () => {
+        // Ensure the video is not muted and play it
+        video.muted = false;
+        video.volume = 1.0; // Set the volume to max
+        video.play().then(() => {
+          console.log('Video with audio is playing.');
+        }).catch((error) => {
+          console.error('Error attempting to play the video with audio:', error);
+        });
+      });
+
+      // Log when the video is playing or encounters an error
+      video.addEventListener('play', () => {
+        console.log('Video with audio is playing.');
+      });
+
+      video.addEventListener('error', (e) => {
+        console.error('Error loading or playing video with audio:', e);
+      });
+    </script>
   </body>
 </html>
